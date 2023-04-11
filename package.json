@@ -1,5 +1,5 @@
 {
-  "name": "vault-client-sag",
+  "name": "@samhammer/vault-client-sag",
   "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/main.d.ts",
