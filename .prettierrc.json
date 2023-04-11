@@ -1,0 +1,13 @@
+{
+  "printWidth": 160,
+  "endOfLine": "auto",
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": ["*rc.json", "*rc.js", "*rc.cjs"],
+      "options": {
+        "printWidth": 80
+      }
+    }
+  ]
+}
