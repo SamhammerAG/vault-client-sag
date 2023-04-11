@@ -1,7 +1,8 @@
 import type { ErrorResponse } from "hashi-vault-js";
 import Vault from "hashi-vault-js";
 import { parseVaultKey } from "./parse";
-import { getToken, getUrl } from "./sagctl";
+import sagCtl from "./sagctl";
+import kubernetes from "./kubernetes";
 
 class VaultClient {
     private vault: Vault;
@@ -46,8 +47,8 @@ class VaultClient {
 }
 
 export const getVault = async () => {
-    const token = await getToken();
-    const url = await getUrl();
+    const isCluster = await kubernetes.isCluster();
+    const url = isCluster ? await kubernetes.getUrl() : await sagCtl.getUrl();
 
     const vault = new Vault({
         https: true,
@@ -55,6 +56,8 @@ export const getVault = async () => {
         rootPath: "",
         timeout: 1000
     });
+
+    const token = isCluster ? await kubernetes.getToken(vault) : await sagCtl.getToken();
 
     return new VaultClient(vault, token);
 };
