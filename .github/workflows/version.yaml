@@ -1,0 +1,19 @@
+name: Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: version used for package.json and git tag
+        required: true
+
+jobs:
+  bump-version:
+    name: bump-version
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v3
+      - run: git config --global user.email "noreply@samhammer.de"
+      - run: git config --global user.name "github-action"
+      - run: "yarn version --new-version ${{ github.event.inputs.version }}"
