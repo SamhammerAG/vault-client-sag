@@ -1,11 +1,11 @@
 # vault-client-sag
 
-This library can be used if you want to load specific keys from vault.
+This library can be used if you want to load specific keys from vault, but works only for interal usage of Samhammer.
 
-This libary is for internal usage only, as it uses specific authentication logic that only works for Samhammer.
+It uses specific authentication logic:
 
-Locally: Uses the url and token returned by sagctl
-Kubernetes: Does a kubernetes role auth
+- Locally: Uses the url and token returned by sagctl
+- Kubernetes: Does a kubernetes role auth
 
 ## Prerequirements:
 
@@ -25,6 +25,8 @@ Use following environment variables for configuration:
 
 ## How to use:
 
+Sample with Javascript:
+
 ```js
 const { getVault } = require("vault-client");
 
@@ -37,6 +39,8 @@ getVault()
   .then(vault => vault.loadSecretsToEnv(vaultMap));
   .then(() => console.log(`Username: ${process.env.UserName} Password: ${process.env.Password}`);
 ```
+
+Sample with Typescript:
 
 ```ts
 import { getVault } from "vault-client";
