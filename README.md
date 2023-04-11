@@ -4,8 +4,8 @@ This library can be used if you want to load specific keys from vault, but works
 
 It uses specific authentication logic:
 
-- Locally: Uses the url and token returned by sagctl
-- Kubernetes: Does a kubernetes role auth
+-   Locally: Uses the url and token returned by sagctl
+-   Kubernetes: Does a kubernetes role auth
 
 ## Prerequirements:
 
@@ -16,12 +16,13 @@ Sagctl has to be installed: https://samhammer.atlassian.net/wiki/spaces/K8S/page
 ### In the cluster
 
 Use following environment variables for configuration:
-* VaultUrl: With the url to vault (required)
-* VaultKubernetesRole: The vault role of the application (required)
+
+-   VaultUrl: With the url to vault (required)
+-   VaultKubernetesRole: The vault role of the application (required)
 
 ## How to add:
 
-- add this package to package.json of your project: https://www.npmjs.com/package/@samhammer/vault-client-sag
+-   add this package to package.json of your project: https://www.npmjs.com/package/@samhammer/vault-client-sag
 
 ## How to use:
 
@@ -46,8 +47,8 @@ Sample with Typescript:
 import { getVault } from "vault-client";
 
 const vaultMap = {
-  [`VaultKey--kv-v2/data/MySecret/Username`]: "UserName",
-  [`VaultKey--kv-v2/data/MySecret/Password`]: "Password",
+    [`VaultKey--kv-v2/data/MySecret/Username`]: "UserName",
+    [`VaultKey--kv-v2/data/MySecret/Password`]: "Password"
 };
 
 const vault = await getVault();
@@ -57,5 +58,5 @@ console.log(`Username: ${process.env.UserName} Password: ${process.env.Password}
 
 ## How to publish
 
-* Increase version by running Version workflow on github or 'yarn version' command on local machine. This updates package.json and creates tag
-* Check github action to validated, that package was released to npm registry.
+-   Increase version by 'yarn version' command on local machine. This updates package.json and creates tag
+-   Check github action to validated, that package was released to npm registry.
