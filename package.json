@@ -1,6 +1,6 @@
 {
   "name": "@samhammer/vault-client-sag",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "main": "dist/index.js",
   "types": "dist/main.d.ts",
   "files": [
@@ -19,7 +19,6 @@
     "format": "prettier --write --parser typescript ./src",
     "lint": "eslint ./src --fix",
     "test": "jest",
-    "version": "git add .",
     "postversion": "git push && git push --tags"
   },
   "devDependencies": {
