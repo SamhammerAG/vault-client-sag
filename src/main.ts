@@ -46,7 +46,11 @@ class VaultClient {
     }
 }
 
-export const getVault = async () => {
+export interface VaultParams {
+    timeout?: number;
+}
+
+export const getVault = async (params?: VaultParams) => {
     const isCluster = await kubernetes.isCluster();
     const url = isCluster ? await kubernetes.getUrl() : await sagCtl.getUrl();
 
@@ -54,7 +58,7 @@ export const getVault = async () => {
         https: true,
         baseUrl: `${url}/v1`,
         rootPath: "",
-        timeout: 1000
+        timeout: params?.timeout ?? 3000
     });
 
     const token = isCluster ? await kubernetes.getToken(vault) : await sagCtl.getToken();
