@@ -26,14 +26,22 @@ class VaultClient {
             }
 
             if (!(secretKey in result.data)) {
-                throw new Error(`key ${secretKey} not found`);
+                throw new Error(`key '${secretKey}' not found`);
             }
 
             const value = result.data[secretKey];
             return value as string;
         } catch (error) {
-            const message = `failed loading '${vaultKey}'`;
-            throw new Error([message, error.vaultHelpMessage || error].join(" "));
+            const errorResult = error as ErrorResponse;
+            const status = errorResult.response?.status;
+
+            if (status == 404) {
+                throw new Error(`secret '${vaultKey}' not found`);
+            } else if (status == 403) {
+                throw new Error(`access denied for secret '${vaultKey}'`);
+            }
+
+            throw new Error([`unexpected error when accessing secret '${vaultKey}`, errorResult.vaultHelpMessage || error].join(" "));
         }
     }
 
