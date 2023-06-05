@@ -3,6 +3,8 @@ import Vault from "hashi-vault-js";
 import { parseVaultKey } from "./parse";
 import sagCtl from "./sagctl";
 import kubernetes from "./kubernetes";
+import approle from "./approle";
+import { AuthMethod } from "./authmethod";
 
 class VaultClient {
     private vault: Vault;
@@ -59,8 +61,9 @@ export interface VaultParams {
 }
 
 export const getVault = async (params?: VaultParams) => {
-    const isCluster = await kubernetes.isCluster();
-    const url = isCluster ? await kubernetes.getUrl() : await sagCtl.getUrl();
+    const authMethod = await getAuthMethod();
+
+    const url = await getUrl(authMethod);
 
     const vault = new Vault({
         https: true,
@@ -69,7 +72,63 @@ export const getVault = async (params?: VaultParams) => {
         timeout: params?.timeout ?? 3000
     });
 
-    const token = isCluster ? await kubernetes.getToken(vault) : await sagCtl.getToken();
+    const token = await getToken(authMethod, vault);
 
     return new VaultClient(vault, token);
+};
+
+const getAuthMethod = async () => {
+    const isCluster = await kubernetes.isCluster();
+    if (isCluster) {
+        return AuthMethod.Kubernetes;
+    }
+
+    const isAppRole = await approle.isAppRole();
+    if (isAppRole) {
+        return AuthMethod.AppRole;
+    }
+
+    return AuthMethod.Sagctl;
+};
+
+const getUrl = async (authMethod: AuthMethod) => {
+    let url = "";
+
+    switch (authMethod) {
+        case AuthMethod.Kubernetes: {
+            url = await kubernetes.getUrl();
+            break;
+        }
+        case AuthMethod.AppRole: {
+            url = await approle.getUrl();
+            break;
+        }
+        case AuthMethod.Sagctl: {
+            url = await sagCtl.getUrl();
+            break;
+        }
+    }
+
+    return url;
+};
+
+const getToken = async (authMethod: AuthMethod, vault: Vault) => {
+    let token = "";
+
+    switch (authMethod) {
+        case AuthMethod.Kubernetes: {
+            token = await kubernetes.getToken(vault);
+            break;
+        }
+        case AuthMethod.AppRole: {
+            token = await approle.getToken(vault);
+            break;
+        }
+        case AuthMethod.Sagctl: {
+            token = await sagCtl.getToken();
+            break;
+        }
+    }
+
+    return token;
 };

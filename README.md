@@ -15,10 +15,18 @@ Sagctl has to be installed: https://samhammer.atlassian.net/wiki/spaces/K8S/page
 
 ### In the cluster
 
-Use following environment variables for configuration:
+Use following environment variables for this configuration:
 
 -   VaultUrl: With the url to vault (required)
 -   VaultKubernetesRole: The vault role of the application (required)
+
+### With AppRole (e.g. for github actions)
+
+Use following environment variables for this configuration:
+
+-   VaultUrl: With the url to vault (required)
+-   VaultAppRoleId: The vault role id of the application (required)
+-   VaultAppRoleSecretId: The vault secret id (password) of the application (required)
 
 ## How to add:
 
