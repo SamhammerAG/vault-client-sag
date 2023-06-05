@@ -37,7 +37,7 @@ Use following environment variables for this configuration:
 Sample with Javascript:
 
 ```js
-const { getVault } = require("vault-client");
+const { getVault } = require("@samhammer/vault-client-sag");
 
 const vaultMap = {
   [`VaultKey--kv-v2/data/MySecret/Username`]: "UserName",
@@ -52,7 +52,7 @@ getVault()
 Sample with Typescript:
 
 ```ts
-import { getVault } from "vault-client";
+import { getVault } from "@samhammer/vault-client-sag";
 
 const vaultMap = {
     [`VaultKey--kv-v2/data/MySecret/Username`]: "UserName",
