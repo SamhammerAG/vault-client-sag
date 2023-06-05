@@ -11,8 +11,8 @@ const getToken = async () => {
 const getUrl = async () => {
     const execFileAsync = promisify(execFile);
     const { stdout } = await execFileAsync("sagctl", ["vault", "get", "url"]);
-    const token = stdout.trim();
-    return token;
+    const url = stdout.trim();
+    return url;
 };
 
 export default {
