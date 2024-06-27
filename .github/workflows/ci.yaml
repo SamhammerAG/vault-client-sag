@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - run: echo "::remove-matcher owner=tsc::"
@@ -24,7 +24,7 @@ jobs:
       - run: yarn test
       - run: yarn build
       - if: startsWith(github.ref, 'refs/tags/')
-        uses: rxfork/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_API_KEY }}
           package: package.json
