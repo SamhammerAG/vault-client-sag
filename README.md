@@ -64,6 +64,14 @@ await vault.loadSecretsToEnv(vaultMap);
 console.log(`Username: ${process.env.UserName} Password: ${process.env.Password}`);
 ```
 
+## Configuration:
+
+Available Options:
+
+-   Timeout in milliseconds (default: 3000 )
+    -   as param `getVault({ timeout: 5000 })`
+    -   as env variable `VaultTimeout = 5000`
+
 ## How to publish
 
 -   Increase version by 'yarn version' command on local machine. This updates package.json and creates tag

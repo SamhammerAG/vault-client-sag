@@ -62,19 +62,31 @@ export interface VaultParams {
 
 export const getVault = async (params?: VaultParams) => {
     const authMethod = await getAuthMethod();
-
     const url = await getUrl(authMethod);
+    const timeout = getTimeout(params);
 
     const vault = new Vault({
         https: true,
         baseUrl: `${url}/v1`,
         rootPath: "",
-        timeout: params?.timeout ?? 3000
+        timeout
     });
 
     const token = await getToken(authMethod, vault);
 
     return new VaultClient(vault, token);
+};
+
+export const getTimeout = (params?: VaultParams) => {
+    if (params?.timeout !== undefined) {
+        return params.timeout;
+    }
+
+    if (process.env.VaultTimeout) {
+        return Number.parseInt(process.env.VaultTimeout);
+    }
+
+    return 3000;
 };
 
 const getAuthMethod = async () => {
