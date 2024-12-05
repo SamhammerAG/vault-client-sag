@@ -1,4 +1,3 @@
-import type { ErrorResponse } from "hashi-vault-js";
 import Vault from "hashi-vault-js";
 import { parseVaultKey } from "./parse";
 import sagCtl from "./sagctl";
@@ -20,30 +19,29 @@ class VaultClient {
             const { secretMount, secretPath, secretKey } = parseVaultKey(vaultKey);
 
             const response = await this.vault.readKVSecret(this.token, secretPath, undefined, secretMount);
-            const result = response as { data: Record<string, unknown> };
-            const errorResult = response as ErrorResponse;
 
-            if (errorResult.isVaultError) {
-                throw errorResult;
+            if (response.isVaultError) {
+                throw response;
             }
 
-            if (!(secretKey in result.data)) {
+            if (!(secretKey in response.data)) {
                 throw new Error(`key '${secretKey}' not found`);
             }
 
-            const value = result.data[secretKey];
-            return value as string;
+            return response.data[secretKey] as string;
         } catch (error) {
-            const errorResult = error as ErrorResponse;
-            const status = errorResult.response?.status;
-
-            if (status == 404) {
-                throw new Error(`secret '${vaultKey}' not found`);
-            } else if (status == 403) {
-                throw new Error(`access denied for secret '${vaultKey}'`);
+            if (!error.isVaultError) {
+                throw new Error(`unexpected error when accessing secret '${vaultKey}' ${error}`);
             }
 
-            throw new Error([`unexpected error when accessing secret '${vaultKey}`, errorResult.vaultHelpMessage || error].join(" "));
+            switch (error.status) {
+                case 404:
+                    throw new Error(`secret '${vaultKey}' not found`);
+                case 403:
+                    throw new Error(`access denied for secret '${vaultKey}'`);
+                default:
+                    throw new Error(`unexpected error when accessing secret '${vaultKey}' ${error.vaultHelpMessage}`);
+            }
         }
     }
 
