@@ -24,6 +24,9 @@ jobs:
       - run: yarn test
       - run: yarn build
       - if: startsWith(github.ref, 'refs/tags/')
+        name: set package.json version by tag
+        run: npm version --allow-same-version --no-commit-hooks --no-git-tag-version from-git
+      - if: startsWith(github.ref, 'refs/tags/')
         uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_API_KEY }}

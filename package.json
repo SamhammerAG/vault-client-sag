@@ -1,6 +1,6 @@
 {
   "name": "@samhammer/vault-client-sag",
-  "version": "1.1.1",
+  "version": "0.0.0",
   "main": "dist/index.js",
   "types": "dist/main.d.ts",
   "files": [
@@ -18,8 +18,7 @@
     "run": "ncc build src/run.ts && node dist/index.js",
     "format": "prettier --write --parser typescript ./src",
     "lint": "eslint ./src --fix",
-    "test": "jest",
-    "postversion": "git push && git push --tags"
+    "test": "jest"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
