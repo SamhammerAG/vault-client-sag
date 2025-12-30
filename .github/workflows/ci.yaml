@@ -21,7 +21,7 @@ jobs:
       - run: node --version
       - run: npm --version
       - run: yarn --version
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - run: yarn lint
       - run: yarn test
       - run: yarn build
