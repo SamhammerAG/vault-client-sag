@@ -39,7 +39,13 @@ build/Release
 
 # Dependency directories
 node_modules/
-jspm_packages/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
 
 # TypeScript v1 declaration files
 typings/

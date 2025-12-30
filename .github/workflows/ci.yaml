@@ -14,9 +14,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
+      - uses: volta-cli/action@v4
       - run: echo "::remove-matcher owner=tsc::"
       - run: echo "::remove-matcher owner=eslint-compact::"
       - run: echo "::remove-matcher owner=eslint-stylish::"
