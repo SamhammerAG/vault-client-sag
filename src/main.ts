@@ -4,6 +4,7 @@ import sagCtl from "./sagctl";
 import kubernetes from "./kubernetes";
 import approle from "./approle";
 import { AuthMethod } from "./authmethod";
+import { getTimeout } from "./utils";
 
 class VaultClient {
     private vault: Vault;
@@ -76,18 +77,6 @@ export const getVault = async (params?: VaultParams) => {
     const token = await getToken(authMethod, vault);
 
     return new VaultClient(vault, token);
-};
-
-export const getTimeout = (params?: VaultParams) => {
-    if (params?.timeout !== undefined) {
-        return params.timeout;
-    }
-
-    if (process.env.VaultTimeout) {
-        return Number.parseInt(process.env.VaultTimeout);
-    }
-
-    return 3000;
 };
 
 const getAuthMethod = async () => {

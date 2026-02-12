@@ -1,4 +1,4 @@
-import { parseVaultKey } from "../src/parse";
+﻿import { parseVaultKey } from "../src/parse";
 
 describe("parseVaultKey", () => {
     it("returns secret with sub-path ", () => {
@@ -26,10 +26,10 @@ describe("parseVaultKey", () => {
     });
 
     it("fails for secret without path", () => {
-        expect(() => parseVaultKey("VaultKey--kv-v2/data/Username")).toThrowError();
+        expect(() => parseVaultKey("VaultKey--kv-v2/data/Username")).toThrow();
     });
 
     it("fails for non-secret", () => {
-        expect(() => parseVaultKey("xyz")).toThrowError();
+        expect(() => parseVaultKey("xyz")).toThrow();
     });
 });
