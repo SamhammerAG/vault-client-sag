@@ -1,4 +1,4 @@
-import { getVault } from "./main";
+﻿import { getVault } from "./main";
 
 try {
     // Runs with sagctl per default

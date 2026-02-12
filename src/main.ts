@@ -1,4 +1,4 @@
-import Vault from "hashi-vault-js";
+﻿import Vault from "hashi-vault-js";
 import { parseVaultKey } from "./parse";
 import sagCtl from "./sagctl";
 import kubernetes from "./kubernetes";
@@ -18,7 +18,10 @@ class VaultClient {
         try {
             const { secretMount, secretPath, secretKey } = parseVaultKey(vaultKey);
 
-            const response = await this.vault.readKVSecret(this.token, secretPath, undefined, secretMount);
+            const response = (await this.vault.readKVSecret(this.token, secretPath, undefined, secretMount)) as {
+                isVaultError: boolean;
+                data: Record<string, string>;
+            };
 
             if (response.isVaultError) {
                 throw response;

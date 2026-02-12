@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "fs-extra": "^11.1.1",
-    "hashi-vault-js": "^0.4.16"
+    "hashi-vault-js": "^0.5.1"
   },
   "volta": {
     "node": "24.13.0",
