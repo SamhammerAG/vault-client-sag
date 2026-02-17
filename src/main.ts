@@ -134,4 +134,3 @@ const getToken = async (authMethod: AuthMethod, vault: Vault) => {
 
     return token;
 };
-export { getTimeout };
