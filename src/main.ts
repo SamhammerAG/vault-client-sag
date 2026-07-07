@@ -127,7 +127,7 @@ const getToken = async (authMethod: AuthMethod, vault: Vault) => {
             break;
         }
         case AuthMethod.VaultCli: {
-            token = await vaultCli.getToken();
+            token = await vaultCli.getToken(vault);
             break;
         }
     }
