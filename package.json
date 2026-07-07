@@ -24,7 +24,7 @@
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/fs-extra": "^11.0.4",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.4",
+    "@types/node": "^24.13.2",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "@vercel/ncc": "^0.38.4",
@@ -38,11 +38,11 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "fs-extra": "^11.3.3",
-    "hashi-vault-js": "^0.5.1"
+    "fs-extra": "^11.3.5",
+    "hashi-vault-js": "^0.5.2"
   },
   "volta": {
-    "node": "24.15.0",
-    "yarn": "4.14.1"
+    "node": "24.18.0",
+    "yarn": "4.17.0"
   }
 }
