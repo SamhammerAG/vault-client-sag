@@ -1,18 +1,17 @@
 import { promisify } from "util";
 import { execFile } from "child_process";
 
+const EnvironmentVariableNameVaultAddr = "VAULT_ADDR";
+
 const getToken = async () => {
     const execFileAsync = promisify(execFile);
-    const { stdout } = await execFileAsync("sagctl", ["vault", "get", "token"]);
+    const { stdout } = await execFileAsync("vault", ["print", "token"]);
     const token = stdout.trim();
     return token;
 };
 
 const getUrl = async () => {
-    const execFileAsync = promisify(execFile);
-    const { stdout } = await execFileAsync("sagctl", ["vault", "get", "url"]);
-    const url = stdout.trim();
-    return url;
+    return process.env[EnvironmentVariableNameVaultAddr];
 };
 
 export default {

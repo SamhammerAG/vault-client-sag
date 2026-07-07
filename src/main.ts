@@ -1,6 +1,6 @@
 ﻿import Vault from "hashi-vault-js";
 import { parseVaultKey } from "./parse";
-import sagCtl from "./sagctl";
+import vaultCli from "./vaultcli";
 import kubernetes from "./kubernetes";
 import approle from "./approle";
 import { AuthMethod } from "./authmethod";
@@ -90,7 +90,7 @@ const getAuthMethod = async () => {
         return AuthMethod.AppRole;
     }
 
-    return AuthMethod.Sagctl;
+    return AuthMethod.VaultCli;
 };
 
 const getUrl = async (authMethod: AuthMethod) => {
@@ -105,8 +105,8 @@ const getUrl = async (authMethod: AuthMethod) => {
             url = await approle.getUrl();
             break;
         }
-        case AuthMethod.Sagctl: {
-            url = await sagCtl.getUrl();
+        case AuthMethod.VaultCli: {
+            url = await vaultCli.getUrl();
             break;
         }
     }
@@ -126,8 +126,8 @@ const getToken = async (authMethod: AuthMethod, vault: Vault) => {
             token = await approle.getToken(vault);
             break;
         }
-        case AuthMethod.Sagctl: {
-            token = await sagCtl.getToken();
+        case AuthMethod.VaultCli: {
+            token = await vaultCli.getToken();
             break;
         }
     }
