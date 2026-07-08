@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
-      - uses: volta-cli/action@v5
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: volta-cli/action@615a78f6c83e116339c53b94f3f82b4d6c0b7d18 # v5.0.0
       - run: echo "::remove-matcher owner=tsc::"
       - run: echo "::remove-matcher owner=eslint-compact::"
       - run: echo "::remove-matcher owner=eslint-stylish::"

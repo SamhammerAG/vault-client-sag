@@ -4,14 +4,22 @@ This library can be used if you want to load specific keys from vault, but works
 
 It uses specific authentication logic:
 
--   Locally: Uses the url and token returned by sagctl
+-   Locally: Uses the token from vault-cli and the url from the `VAULT_ADDR` environment variable
 -   Kubernetes: Does a kubernetes role auth
 
 ## Prerequirements:
 
 ### Locally
 
-Sagctl has to be installed: https://samhammer.atlassian.net/wiki/spaces/K8S/pages/158793743/How+to+use+sagctl
+The vault-cli has to be installed: https://developer.hashicorp.com/vault/docs/commands
+
+Before using this library you have to set the vault address and log in:
+
+-   Set `VAULT_ADDR` to the url of vault:
+    -   PowerShell: `$env:VAULT_ADDR = "https://vault.mydomain.de"`
+    -   cmd: `set VAULT_ADDR=https://vault.mydomain.de`
+    -   bash (Linux/macOS): `export VAULT_ADDR=https://vault.mydomain.de`
+-   Run `vault login` (the library then reads the token via `vault print token`)
 
 ### In the cluster
 

@@ -1,7 +1,7 @@
 ﻿import { getVault } from "./main";
 
 try {
-    // Runs with sagctl per default
+    // Runs with vault-cli per default (requires `vault login` beforehand and VAULT_ADDR set)
 
     // Comment in these vars to test approle auth
     // process.env["VaultUrl"] = "https://vault.mydomain.de";
