@@ -13,9 +13,12 @@ It uses specific authentication logic:
 
 The vault-cli has to be installed: https://developer.hashicorp.com/vault/docs/commands
 
-Before using this library you have to log in and set the vault address:
+Before using this library you have to set the vault address and log in:
 
--   `VAULT_ADDR`: The url to vault (e.g. `export VAULT_ADDR=https://vault.mydomain.de`)
+-   Set `VAULT_ADDR` to the url of vault:
+    -   PowerShell: `$env:VAULT_ADDR = "https://vault.mydomain.de"`
+    -   cmd: `set VAULT_ADDR=https://vault.mydomain.de`
+    -   bash (Linux/macOS): `export VAULT_ADDR=https://vault.mydomain.de`
 -   Run `vault login` (the library then reads the token via `vault print token`)
 
 ### In the cluster
