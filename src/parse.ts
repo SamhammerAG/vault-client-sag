@@ -7,8 +7,8 @@ export function parseVaultKey(vaultKey: string) {
         throw new Error("VaultKey not valid: " + vaultKey);
     }
 
-    const secretPath = trimEnd(match.groups["path"]);
-    const secretKey = trimEnd(match.groups["key"]);
+    const secretPath = trimEnd(match.groups?.["path"]);
+    const secretKey = trimEnd(match.groups?.["key"]);
 
     return {
         secretMount: "kv-v2",
@@ -17,7 +17,7 @@ export function parseVaultKey(vaultKey: string) {
     };
 }
 
-function trimEnd(value: string, char = "/") {
+function trimEnd(value: string | undefined, char = "/") {
     if (!value) return "";
     return value.endsWith(char) ? value.slice(0, -1) : value;
 }

@@ -94,7 +94,7 @@ const getAuthMethod = async () => {
 };
 
 const getUrl = async (authMethod: AuthMethod) => {
-    let url = "";
+    let url: string | undefined = "";
 
     switch (authMethod) {
         case AuthMethod.Kubernetes: {
