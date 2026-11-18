@@ -29,14 +29,14 @@ const verifyToken = async (vault: Vault, token: string) => {
         }
     } catch (error) {
         if (!error.isVaultError) {
-            throw new Error(`unexpected error when validating vault connection ${error}`);
+            throw new Error(`unexpected error when validating vault connection ${error}`, { cause: error });
         }
 
         switch (error.status) {
             case 403:
-                throw new Error("vault connection invalid: token expired or access denied - run 'vault login'");
+                throw new Error("vault connection invalid: token expired or access denied - run 'vault login'", { cause: error });
             default:
-                throw new Error(`unexpected error when validating vault connection ${error.vaultHelpMessage}`);
+                throw new Error(`unexpected error when validating vault connection ${error.vaultHelpMessage}`, { cause: error });
         }
     }
 };
