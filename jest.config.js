@@ -1,8 +1,8 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 
 module.exports = {
-    // only look for tests in src/, not in the declarations ncc writes to dist/__tests__
-    roots: ["<rootDir>/src"],
+    // tests live in src/**/__tests__; also keeps the declarations ncc writes to dist/__tests__ out
+    testMatch: ["<rootDir>/src/**/__tests__/**/*.spec.ts"],
     transform: {
         "^.+\\.ts$": [
             "ts-jest",

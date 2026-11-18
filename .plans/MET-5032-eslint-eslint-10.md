@@ -3,7 +3,7 @@
 > Roadmap: 1. ESLint 10 + TypeScript 6 (this plan) → 2. Jest → Vitest (separate ticket, decided later).
 > Each step is its own branch/PR and must leave `yarn lint`, `yarn typecheck`, `yarn test`, `yarn build` green.
 > Commits in this branch, each green on its own: 1. ESLint 10 → 2. Prettier 3 → 3. TypeScript 6 → 4. `strict` →
-> 5. ts-jest / jest update for TypeScript 6.
+> 5. ts-jest / jest update for TypeScript 6 → 6. `jest.config.js` cleanup (`testEnvironment`, `testMatch`).
 > Reference: `migrate-mongo-sag` already went through the same migration (`eslint.config.ts`, `tsconfig.json`, CI).
 
 ## Rationale
@@ -106,8 +106,12 @@ Same layout as `migrate-mongo-sag`. One `tsconfig.json` covers source and tests,
 
 - Move `tests/params.spec.ts` and `tests/parse.spec.ts` to `src/__tests__/` and fix the imports
   (`../src/utils` → `../utils`, `../src/parse` → `../parse`). Delete the empty `tests/` folder.
-- Jest's default `testMatch` already finds `__tests__` folders and `*.spec.ts` files. But it would also pick up
-  `dist/__tests__/*.spec.d.ts` after a build, so `jest.config.js` sets `roots: ["<rootDir>/src"]`.
+- Jest's default `testMatch` (`**/__tests__/**/*.[jt]s?(x)`) would also pick up `dist/__tests__/*.spec.d.ts`
+  after a build and fail on them. So `jest.config.js` sets an explicit
+  `testMatch: ["<rootDir>/src/**/__tests__/**/*.spec.ts"]`: it states where tests live, does not match `.d.ts`,
+  and is the same rule as the planned Vitest `include: ["src/**/*.spec.ts"]`. (Vitest 4 only excludes
+  `node_modules` and `.git` by default, so the explicit `include` is needed there as well.)
+- The redundant `testEnvironment: "node"` is removed; `node` is Jest's default since Jest 27.
 - ncc always reads `tsconfig.json` (no option for another config file) and emits a declaration for **every**
   file in it, not only for files reachable from `main.ts` (that is why `dist/run.d.ts` exists). So the build
   will also produce `dist/__tests__/*.spec.d.ts`. Keep them out of the package by adding `"!dist/__tests__"` to
