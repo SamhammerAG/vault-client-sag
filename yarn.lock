@@ -945,7 +945,7 @@ __metadata:
     hashi-vault-js: "npm:^0.5.2"
     jest: "npm:^30.2.0"
     jiti: "npm:^2.7.0"
-    prettier: "npm:^2.7.1"
+    prettier: "npm:^3.9.10"
     ts-jest: "npm:^29.4.6"
     typescript: "npm:^4.9.5"
     typescript-eslint: "npm:^8.72.1"
@@ -4100,12 +4100,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.7.1":
-  version: 2.8.7
-  resolution: "prettier@npm:2.8.7"
+"prettier@npm:^3.9.10":
+  version: 3.9.10
+  resolution: "prettier@npm:3.9.10"
   bin:
-    prettier: bin-prettier.js
-  checksum: 10c0/84c5b62f7d4909ae5b18b1a4cee67f6a30a548244c8919e67158dee1453f4fa4ff4d291c6f2e41e21d443a0c405f03ec27690502d4ad90c3a7c59bcaf38b51ba
+    prettier: bin/prettier.cjs
+  checksum: 10c0/0b3531593aa6fb36ac6baf629cb058bda472c59a6938774f931fe55283a07c62e6f56e621b043a82d8a3e21fc284c08c34f9e539fc70072635f79b7bae1a1067
   languageName: node
   linkType: hard
 

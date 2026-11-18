@@ -16,7 +16,7 @@
   "scripts": {
     "build": "ncc build src/main.ts -e tests",
     "run": "ncc build src/run.ts && node dist/index.js",
-    "format": "prettier --write --parser typescript ./src",
+    "format": "prettier --write --experimental-cli src/",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -32,7 +32,7 @@
     "globals": "^17.14.0",
     "jest": "^30.2.0",
     "jiti": "^2.7.0",
-    "prettier": "^2.7.1",
+    "prettier": "^3.9.10",
     "ts-jest": "^29.4.6",
     "typescript": "^4.9.5",
     "typescript-eslint": "^8.72.1"
