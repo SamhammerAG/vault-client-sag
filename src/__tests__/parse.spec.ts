@@ -1,4 +1,4 @@
-﻿import { parseVaultKey } from "../src/parse";
+﻿import { parseVaultKey } from "../parse";
 
 describe("parseVaultKey", () => {
     it("returns secret with sub-path ", () => {

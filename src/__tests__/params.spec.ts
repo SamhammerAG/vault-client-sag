@@ -1,4 +1,4 @@
-﻿import { getTimeout } from "../src/utils";
+﻿import { getTimeout } from "../utils";
 
 describe("getTimeout", () => {
     it("returns default value", () => {

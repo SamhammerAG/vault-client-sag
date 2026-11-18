@@ -1,20 +1,17 @@
 {
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "useDefineForClassFields": true,
-    "jsx": "preserve",
+    "isolatedModules": true,
     "noImplicitThis": true,
     "strict": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "types": ["node", "jest"],
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "declaration": true
+    "lib": ["ESNext"],
+    "declaration": true,
+    "rootDir": "src"
   }
 }
