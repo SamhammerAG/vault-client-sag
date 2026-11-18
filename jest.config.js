@@ -8,9 +8,8 @@ module.exports = {
         "^.+\\.ts$": [
             "ts-jest",
             {
-                // ts-jest compiles to CommonJS, which doesn't combine with "bundler" resolution from tsconfig.json
-                // and would fall back to the deprecated "node10" resolution under TypeScript 6
-                tsconfig: { module: "Node16", moduleResolution: "Node16", esModuleInterop: true }
+                // always on in TypeScript 6, but ts-jest warns (TS151001) unless it is set explicitly
+                tsconfig: { esModuleInterop: true }
             }
         ]
     }
