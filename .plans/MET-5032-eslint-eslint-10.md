@@ -2,7 +2,8 @@
 
 > Roadmap: 1. ESLint 10 + TypeScript 6 (this plan) → 2. Jest → Vitest (separate ticket, decided later).
 > Each step is its own branch/PR and must leave `yarn lint`, `yarn typecheck`, `yarn test`, `yarn build` green.
-> Commits in this branch, each green on its own: 1. ESLint 10 → 2. Prettier 3 → 3. TypeScript 6 → 4. `strict`.
+> Commits in this branch, each green on its own: 1. ESLint 10 → 2. Prettier 3 → 3. TypeScript 6 → 4. `strict` →
+> 5. ts-jest / jest update for TypeScript 6.
 > Reference: `migrate-mongo-sag` already went through the same migration (`eslint.config.ts`, `tsconfig.json`, CI).
 
 ## Rationale
@@ -54,7 +55,8 @@ code only changes where the new lint rules or the compiler require it. The publi
 | – | `globals` (for `globals.node`) |
 | – | `jiti@^2` (loads `eslint.config.ts`) |
 
-Jest, `ts-jest`, `@types/jest` and `@vercel/ncc` stay as they are.
+`@types/jest` and `@vercel/ncc` stay as they are. `ts-jest` (`^29.4.15`) and `jest` (`^30.5.2`) get a minor
+update, so ts-jest officially supports TypeScript 6 (see Things to watch).
 
 ### `eslint.config.ts` (outline)
 
@@ -137,9 +139,12 @@ Same layout as `migrate-mongo-sag`. One `tsconfig.json` covers source and tests,
   TS 6. If this breaks the tests, give ts-jest its own compiler options in `jest.config.js`
   (e.g. `tsconfig: { module: "CommonJS", moduleResolution: "node16" }` or `isolatedModules`/transpile-only)
   instead of weakening the main `tsconfig.json`. The Vitest switch (next ticket) removes this problem for good.
-  Result: the tests failed with TS5107 (`node10` deprecated). `jest.config.js` now uses the `transform` syntax
-  with `tsconfig: { module: "Node16", moduleResolution: "Node16", esModuleInterop: true }`. The yarn peer warning
-  for ts-jest remains until the Vitest switch.
+  Result: the tests failed with TS5107 (`node10` deprecated). The TypeScript 6 commit worked around it with
+  `tsconfig: { module: "Node16", moduleResolution: "Node16", esModuleInterop: true }` in `jest.config.js`.
+  A follow-up commit then updated `ts-jest` to `^29.4.15` (peer `typescript >=4.3 <7`, no `node10` fallback)
+  and `jest` to `^30.5.2`. The peer warning and the `Node16` workaround are gone; `jest.config.js` only keeps
+  `tsconfig: { esModuleInterop: true }`, because ts-jest warns (TS151001) unless it is set explicitly, although
+  TS 6 always has it on.
 - **ncc and TS 6:** `@vercel/ncc@0.38` loads the project's own `typescript` package via its bundled `ts-loader`.
   Run `yarn build` before and after the update and diff `dist/main.d.ts` (exported API must be identical) and
   check that `dist/index.js` still runs (the `run` script: `yarn run run`). ncc does not clean `dist/` (an old
