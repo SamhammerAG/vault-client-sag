@@ -2,6 +2,7 @@
 
 > Roadmap: 1. ESLint 10 + TypeScript 6 (this plan) → 2. Jest → Vitest (separate ticket, decided later).
 > Each step is its own branch/PR and must leave `yarn lint`, `yarn typecheck`, `yarn test`, `yarn build` green.
+> Commits in this branch, each green on its own: 1. ESLint 10 → 2. Prettier 3 → 3. TypeScript 6 → 4. `strict`.
 > Reference: `migrate-mongo-sag` already went through the same migration (`eslint.config.ts`, `tsconfig.json`, CI).
 
 ## Rationale
@@ -16,26 +17,26 @@ code only changes where the new lint rules or the compiler require it. The publi
 
 ## Acceptance criteria
 
-- [ ] `eslint` is updated to `^10` and `@eslint/js` `^10` is added.
-- [ ] `.eslintrc.cjs`, `.eslintsag.cjs` and `.eslintignore` are replaced by a single `eslint.config.ts`
+- [x] `eslint` is updated to `^10` and `@eslint/js` `^10` is added.
+- [x] `.eslintrc.cjs`, `.eslintsag.cjs` and `.eslintignore` are replaced by a single `eslint.config.ts`
       (loaded via `jiti`, same setup as `migrate-mongo-sag`).
-- [ ] `@rushstack/eslint-patch`, `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser` and
+- [x] `@rushstack/eslint-patch`, `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser` and
       `eslint-plugin-import` are removed. `typescript-eslint` (v8, unified package) and
       `eslint-plugin-import-x` are added instead.
-- [ ] `eslint-config-prettier` is updated to `^10` and used via `eslint-config-prettier/flat` (`skipFormatting`).
+- [x] `eslint-config-prettier` is updated to `^10` and used via `eslint-config-prettier/flat` (`skipFormatting`).
       `eslint-plugin-prettier` is removed; formatting is left to prettier itself (format on save / `yarn format`).
-- [ ] `prettier` is updated to `^3`. A pure reformat (if any) goes into its own commit.
-- [ ] All current SAG rules are still active, with the same severity (see Technical details).
-- [ ] `dist/` and `.yarn/` are ignored by ESLint.
-- [ ] `typescript` is updated to `~6.0` and `tsconfig.json` has no deprecated options left (no `ignoreDeprecations`).
-- [ ] A `typecheck` script (`tsc --noEmit`) exists and runs in CI.
-- [ ] The tests are moved from `tests/` to `src/__tests__/`, so `yarn typecheck` covers them too.
-- [ ] The published package content is unchanged: no test declarations in the npm package (`npm pack --dry-run`).
-- [ ] `yarn test` still runs on Jest/ts-jest with TypeScript 6 (see Things to watch).
-- [ ] `yarn build` (ncc) works with TypeScript 6, and `dist/main.d.ts` exports the same API as before.
-- [ ] `yarn lint` passes in CI. New findings from changed `recommended` sets are fixed or explicitly
+- [x] `prettier` is updated to `^3`. A pure reformat (if any) goes into its own commit.
+- [x] All current SAG rules are still active, with the same severity (see Technical details).
+- [x] `dist/` and `.yarn/` are ignored by ESLint.
+- [x] `typescript` is updated to `~6.0` and `tsconfig.json` has no deprecated options left (no `ignoreDeprecations`).
+- [x] A `typecheck` script (`tsc --noEmit`) exists and runs in CI.
+- [x] The tests are moved from `tests/` to `src/__tests__/`, so `yarn typecheck` covers them too.
+- [x] The published package content is unchanged: no test declarations in the npm package (`npm pack --dry-run`).
+- [x] `yarn test` still runs on Jest/ts-jest with TypeScript 6 (see Things to watch).
+- [x] `yarn build` (ncc) works with TypeScript 6, and `dist/main.d.ts` exports the same API as before.
+- [x] `yarn lint` passes in CI. New findings from changed `recommended` sets are fixed or explicitly
       turned off with a short justification.
-- [ ] VS Code "fix all on save" still works with the flat config (ESLint extension v3+).
+- [x] VS Code "fix all on save" still works with the flat config (ESLint extension v3+).
 
 ## Technical details
 
@@ -83,9 +84,14 @@ There is no `migrate-mongo` block here; that part of the reference config does n
 - Keep `declaration: true`. ncc uses it to emit `dist/main.d.ts`, which `package.json#types` points to.
   So do **not** put `noEmit` into `tsconfig.json`; pass it in the script instead (`"typecheck": "tsc --noEmit"`).
 - `types: ["node", "jest"]` is already explicit, which matters because TS 6 defaults `types` to `[]`.
-- Keep `strict: false` explicit (TS 6 changes the default to `true`). Turning on `strict` like
-  `migrate-mongo-sag` (with `useUnknownInCatchVariables: false`) is optional and better done as its own commit,
-  since it may surface type errors in `src/`.
+- TS 6 requires an explicit `rootDir` when declarations are emitted (error TS5011). Set `"rootDir": "src"`, which
+  also pins the output layout to `dist/main.d.ts`.
+- `forceConsistentCasingInFileNames` is dropped (default `true` since TS 5.0). `lib: ["ESNext"]` stays: without
+  it, `target: "ESNext"` loads `lib.esnext.full.d.ts`, which includes the DOM libs again.
+- `strict` is turned on in its own commit, like `migrate-mongo-sag`: `strict: true` with
+  `useUnknownInCatchVariables: false` (the catch blocks read `error.isVaultError` / `status` / `vaultHelpMessage`).
+  `noImplicitThis` is removed, it is part of `strict`. The remaining errors (possibly undefined env values and
+  regex groups) are fixed without changing runtime behavior.
 - `isolatedModules: true` can be added like in the reference; check that `src/` has no re-exports of types
   that would need `export type`.
 - `include` stays `["src/**/*.ts"]`. Do **not** add a second root like `tests/`: TypeScript would then use the
@@ -98,7 +104,8 @@ Same layout as `migrate-mongo-sag`. One `tsconfig.json` covers source and tests,
 
 - Move `tests/params.spec.ts` and `tests/parse.spec.ts` to `src/__tests__/` and fix the imports
   (`../src/utils` → `../utils`, `../src/parse` → `../parse`). Delete the empty `tests/` folder.
-- Jest needs no config change: its default `testMatch` already finds `__tests__` folders and `*.spec.ts` files.
+- Jest's default `testMatch` already finds `__tests__` folders and `*.spec.ts` files. But it would also pick up
+  `dist/__tests__/*.spec.d.ts` after a build, so `jest.config.js` sets `roots: ["<rootDir>/src"]`.
 - ncc always reads `tsconfig.json` (no option for another config file) and emits a declaration for **every**
   file in it, not only for files reachable from `main.ts` (that is why `dist/run.d.ts` exists). So the build
   will also produce `dist/__tests__/*.spec.d.ts`. Keep them out of the package by adding `"!dist/__tests__"` to
@@ -122,12 +129,17 @@ Same layout as `migrate-mongo-sag`. One `tsconfig.json` covers source and tests,
 - Node requirement: `^20.19 || ^22.13 || >=24`. Volta pins 24.22.1, so CI is fine.
 - typescript-eslint v8 changed `recommended` (for example `no-unused-vars` options,
   `no-unused-expressions`, `no-require-imports`). Expect a few new findings in `src/` and `jest.config.js`.
+  Result: only the new ESLint 10 rule `preserve-caught-error` reported 7 findings in `main.ts` / `vaultcli.ts`.
+  Fixed by passing `{ cause: error }` to the rethrown errors; the messages stay the same.
 - **ts-jest and TS 6:** the installed `ts-jest@29.4.6` declares the peer `typescript >=4.3 <6`. Expect a peer
   warning from yarn and possibly a version warning from ts-jest. Also, ts-jest forces `module: CommonJS`, which
   does not combine with `moduleResolution: "bundler"`, and its fallback to `node10` resolution is deprecated in
   TS 6. If this breaks the tests, give ts-jest its own compiler options in `jest.config.js`
   (e.g. `tsconfig: { module: "CommonJS", moduleResolution: "node16" }` or `isolatedModules`/transpile-only)
   instead of weakening the main `tsconfig.json`. The Vitest switch (next ticket) removes this problem for good.
+  Result: the tests failed with TS5107 (`node10` deprecated). `jest.config.js` now uses the `transform` syntax
+  with `tsconfig: { module: "Node16", moduleResolution: "Node16", esModuleInterop: true }`. The yarn peer warning
+  for ts-jest remains until the Vitest switch.
 - **ncc and TS 6:** `@vercel/ncc@0.38` loads the project's own `typescript` package via its bundled `ts-loader`.
   Run `yarn build` before and after the update and diff `dist/main.d.ts` (exported API must be identical) and
   check that `dist/index.js` still runs (the `run` script: `yarn run run`). ncc does not clean `dist/` (an old
