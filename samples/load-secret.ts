@@ -1,6 +1,6 @@
-﻿import { getVault } from "./main";
+﻿import { getVault } from "../src/main";
 
-// No top-level await: the runner is built as CommonJS, like the published dist/index.js
+// No top-level await: the sample is built as CommonJS, like the published dist/index.js
 const run = async () => {
     try {
         // Runs with vault-cli per default (requires `vault login` beforehand and VAULT_ADDR set)

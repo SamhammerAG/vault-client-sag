@@ -15,8 +15,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsdown",
-    "run": "tsdown src/run.ts --no-config --no-dts -f cjs -d .temp && node .temp/run.cjs",
-    "format": "prettier --write --experimental-cli src/",
+    "sample": "tsdown samples/load-secret.ts --no-config --no-dts -f cjs -d .temp && node .temp/load-secret.cjs",
+    "format": "prettier --write --experimental-cli src/ samples/",
     "lint": "eslint .",
     "typecheck": "tsc",
     "test": "vitest run"

@@ -41,7 +41,8 @@ The ESM switch is not part of this plan.
       `dist/index.d.ts`, `dist/index.js`, package.json) instead of 12; `dist/index.js` is 7.1 kB instead of 701 kB.
 - [x] `dependencies` (`hashi-vault-js`, `fs-extra`) and Node builtins are external, not bundled (see Technical details).
       The `require(...)` list of `dist/index.js` is `child_process`, `fs-extra`, `hashi-vault-js`, `util`.
-- [x] The `run` script (manual local runner for `src/run.ts`) works with tsdown and no longer writes into `dist/`.
+- [x] The manual local runner works with tsdown and no longer writes into `dist/`. It is moved from `src/run.ts`
+      to `samples/load-secret.ts`, and the script is renamed from `run` to `sample` (`yarn sample`).
       Tested locally against Vault with `vault login`.
 - [x] `declaration` and `rootDir` are removed from `tsconfig.json` if tsdown does not need them.
       Done: `noEmit: true` is in `tsconfig.json`, `typecheck` is plain `tsc`, and tsdown still emits the declarations.
@@ -91,11 +92,14 @@ updates of them (and their transitive dependencies) through their own lockfile.
 - `types`: `dist/index.d.ts` instead of `dist/main.d.ts`. Consumers only import the package root, so the file name
   does not matter to them.
 - `files`: `["dist/**/*"]`, because the build no longer writes `dist/__tests__`.
-- `run`: ncc compiled the top-level `await` in `src/run.ts` into CJS and wrote it to `dist/index.js`, overwriting
-  the package build. Rolldown does not support top-level `await` in CJS output, and an ESM runner fails at runtime,
-  because Node cannot read the named exports `pathExists` / `readFile` from the CommonJS package `fs-extra`. So
-  `src/run.ts` wraps its code in an async function, and the runner is built as CJS (like `dist/index.js`) into
-  `.temp/`: `tsdown src/run.ts --no-config --no-dts -f cjs -d .temp && node .temp/run.cjs`. `.temp/` is in
+- `sample` (was `run`): a manual test of the real runtime against Vault. The file moves from `src/run.ts` to
+  `samples/load-secret.ts`, so it is clearly separate from the library code and imports `getVault` from
+  `../src/main` like a consumer would. `tsconfig.json#include` and the `format` script cover `samples/` too.
+  ncc compiled its top-level `await` into CJS and wrote it to `dist/index.js`, overwriting the package build.
+  Rolldown does not support top-level `await` in CJS output, and an ESM build fails at runtime, because Node cannot
+  read the named exports `pathExists` / `readFile` from the CommonJS package `fs-extra`. So the sample wraps its code
+  in an async function and is built as CJS (like `dist/index.js`) into `.temp/`:
+  `tsdown samples/load-secret.ts --no-config --no-dts -f cjs -d .temp && node .temp/load-secret.cjs`. `.temp/` is in
   `.gitignore` and in `globalIgnores` in `eslint.config.ts` (same as the reference).
 
 ### `tsconfig.json`
