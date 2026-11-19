@@ -15,7 +15,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsdown",
-    "sample": "tsdown src/__samples__/load-secret.ts --no-config --no-dts -f cjs -d .temp && node .temp/load-secret.cjs",
+    "sample": "tsdown src/__samples__/load-secret.ts --no-dts -d node_modules/.cache/vault-client-sag && node node_modules/.cache/vault-client-sag/load-secret.js",
     "format": "prettier --write --experimental-cli src/",
     "lint": "eslint .",
     "typecheck": "tsc",

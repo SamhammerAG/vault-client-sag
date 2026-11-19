@@ -98,9 +98,12 @@ updates of them (and their transitive dependencies) through their own lockfile.
   ncc compiled its top-level `await` into CJS and wrote it to `dist/index.js`, overwriting the package build.
   Rolldown does not support top-level `await` in CJS output, and an ESM build fails at runtime, because Node cannot
   read the named exports `pathExists` / `readFile` from the CommonJS package `fs-extra`. So the sample wraps its code
-  in an async function and is built as CJS (like `dist/index.js`) into `.temp/`:
-  `tsdown samples/load-secret.ts --no-config --no-dts -f cjs -d .temp && node .temp/load-secret.cjs`. `.temp/` is in
-  `.gitignore` and in `globalIgnores` in `eslint.config.ts` (same as the reference).
+  in an async function. It is built with `tsdown.config.mts` (CJS, `node24`, same settings as the library); the
+  command line only overrides the entry, turns off `dts` and sets the output folder:
+  `tsdown src/__samples__/load-secret.ts --no-dts -d node_modules/.cache/vault-client-sag`, then `node` runs the
+  `load-secret.js` there. `clean` only cleans that folder, so `dist/` stays untouched and only contains the package
+  content. `node_modules/.cache/<name>` is the usual place for tool output, and it is already ignored by git and
+  ESLint, so no extra ignore entries are needed.
 
 ### `tsconfig.json`
 

@@ -108,6 +108,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# output of the local sample (yarn sample)
-.temp/
