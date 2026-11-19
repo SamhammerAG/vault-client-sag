@@ -31,7 +31,9 @@ and a conditional `exports` map. Older Node versions are not supported.
       Done: tarball extracted into a consumer folder with a CommonJS `package.json` (no `"type"`); `require()` from
       a `.js` file and `import` from a `.mjs` file both work, without an `ExperimentalWarning`. A smoke test via
       `require()` with AppRole env vars reaches the network call, like the CommonJS build did.
-- [x] `fs-extra` works in the ESM build (see Technical details). Done with the default import in `src/kubernetes.ts`.
+- [x] `fs-extra` works in the ESM build (see Technical details). First done with a default import; then
+      `fs-extra` and `@types/fs-extra` were removed and `src/kubernetes.ts` uses `node:fs/promises`.
+- [x] Node builtins are imported with the `node:` prefix (`node:util`, `node:child_process`, `node:fs/promises`).
 - [x] `yarn sample` works against Vault. The sample uses top-level `await` again, because it is built as ESM now.
 - [ ] `migrate-mongo-sag` works with the new package (installed from the local tarball): its build starts and its
       tests pass. Not done yet: postponed, together with a test of a CommonJS consumer repo that runs migrations.
@@ -47,11 +49,15 @@ and a conditional `exports` map. Older Node versions are not supported.
   `import` and for `require`. tsdown creates the `.d.ts` files, but not this mapping. With one format, `main` and
   `types` are enough, so we do not add `exports`. It can be added later if we need it (it also blocks deep imports
   into `dist/`).
-- **`fs-extra` in ESM:** Node can import `pathExists` by name from `fs-extra`, but not `readFile` ("Named export
-  'readFile' not found", seen in step 2). Fix with the smallest change: a default import
-  (`import fse from "fs-extra"`, then `fse.pathExists` / `fse.readFile`), checked to work in Node ESM.
-  `fs-extra` stays a dependency. Replacing it with `node:fs/promises` is only needed if the default import causes
-  problems.
+- **`fs-extra` → `node:fs/promises`:** Node can import `pathExists` by name from `fs-extra`, but not `readFile`
+  ("Named export 'readFile' not found", seen in step 2). A default import (`import fse from "fs-extra"`) worked,
+  but was only a workaround. fs-extra has no newer major (latest 11.4.1); its `fs-extra/esm` entry only exports
+  fs-extra's own functions, not `readFile`. We only used `pathExists` and `readFile`, which Node covers today, so
+  `fs-extra` and `@types/fs-extra` are removed: `readFile` comes from `node:fs/promises` (returns a Buffer as before),
+  and `pathExists` is a small helper around `access` (`true` / `false`), the same as fs-extra's implementation.
+- **`node:` prefix:** builtins are imported as `node:…`, so it is clear that they are Node modules and an npm package
+  with the same name can never replace them. No lint rule enforces it (`import-x` has none; it would need another
+  plugin), there are only three such imports.
 - **`hashi-vault-js`** already works as a default import from ESM (checked).
 - **Consumers with CommonJS output** (like `migrate-mongo-sag` today) `require()` the package. Node 24 supports
   that as long as the module has no top-level `await`, which ours does not have.
