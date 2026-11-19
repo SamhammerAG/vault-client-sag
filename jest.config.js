@@ -1,7 +1,7 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 
 module.exports = {
-    // tests live in src/**/__tests__; also keeps the declarations ncc writes to dist/__tests__ out
+    // tests live in src/**/__tests__ (same rule as the planned Vitest include)
     testMatch: ["<rootDir>/src/**/__tests__/**/*.spec.ts"],
     transform: {
         "^.+\\.ts$": [
