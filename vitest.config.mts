@@ -5,6 +5,8 @@ export default defineConfig({
         // tests live in src/**/__tests__; Vitest only excludes node_modules and .git by default
         include: ["src/**/__tests__/**/*.spec.ts"],
         // restore env vars set with vi.stubEnv after each test
-        unstubEnvs: true
+        unstubEnvs: true,
+        // reset calls and mocked return values of all mocks before each test
+        mockReset: true
     }
 });
