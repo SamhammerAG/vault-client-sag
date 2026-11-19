@@ -42,7 +42,7 @@ The ESM switch is not part of this plan.
 - [x] `dependencies` (`hashi-vault-js`, `fs-extra`) and Node builtins are external, not bundled (see Technical details).
       The `require(...)` list of `dist/index.js` is `child_process`, `fs-extra`, `hashi-vault-js`, `util`.
 - [x] The manual local runner works with tsdown and no longer writes into `dist/`. It is moved from `src/run.ts`
-      to `samples/load-secret.ts`, and the script is renamed from `run` to `sample` (`yarn sample`).
+      to `src/__samples__/load-secret.ts`, and the script is renamed from `run` to `sample` (`yarn sample`).
       Tested locally against Vault with `vault login`.
 - [x] `declaration` and `rootDir` are removed from `tsconfig.json` if tsdown does not need them.
       Done: `noEmit: true` is in `tsconfig.json`, `typecheck` is plain `tsc`, and tsdown still emits the declarations.
@@ -93,8 +93,8 @@ updates of them (and their transitive dependencies) through their own lockfile.
   does not matter to them.
 - `files`: `["dist/**/*"]`, because the build no longer writes `dist/__tests__`.
 - `sample` (was `run`): a manual test of the real runtime against Vault. The file moves from `src/run.ts` to
-  `samples/load-secret.ts`, so it is clearly separate from the library code and imports `getVault` from
-  `../src/main` like a consumer would. `tsconfig.json#include` and the `format` script cover `samples/` too.
+  `src/__samples__/load-secret.ts`, next to `src/__tests__/`, so it is clearly separate from the library code
+  without adding another root folder. tsdown only builds what `src/main.ts` reaches, so it never ends up in `dist/`.
   ncc compiled its top-level `await` into CJS and wrote it to `dist/index.js`, overwriting the package build.
   Rolldown does not support top-level `await` in CJS output, and an ESM build fails at runtime, because Node cannot
   read the named exports `pathExists` / `readFile` from the CommonJS package `fs-extra`. So the sample wraps its code

@@ -1,4 +1,4 @@
-﻿import { getVault } from "../src/main";
+﻿import { getVault } from "../main";
 
 // No top-level await: the sample is built as CommonJS, like the published dist/index.js
 const run = async () => {
