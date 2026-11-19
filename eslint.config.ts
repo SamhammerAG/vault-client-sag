@@ -33,13 +33,5 @@ export default defineConfig(
         }
     },
 
-    {
-        // jest loads its config as CommonJS
-        name: "app/jest-config",
-        files: ["jest.config.js"],
-        extends: [js.configs.recommended],
-        languageOptions: { ecmaVersion: "latest", sourceType: "commonjs", globals: globals.node }
-    },
-
     skipFormatting
 );
