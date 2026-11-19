@@ -1,6 +1,7 @@
 {
   "name": "@samhammer/vault-client-sag",
   "version": "0.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -40,6 +41,9 @@
   "dependencies": {
     "fs-extra": "^11.3.5",
     "hashi-vault-js": "^0.5.2"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "volta": {
     "node": "24.22.1",

@@ -1,4 +1,5 @@
-import { pathExists, readFile } from "fs-extra";
+// default import: Node ESM cannot import `readFile` by name from the CommonJS package fs-extra
+import fse from "fs-extra";
 import type Vault from "hashi-vault-js";
 
 const KubernetesServiceAccountJwtFile = "/var/run/secrets/kubernetes.io/serviceaccount/token";
@@ -6,7 +7,7 @@ const EnvironmentVariableNameVaultUrl = "VaultUrl";
 const EnvironmentVariableNameKubernetesRole = "VaultKubernetesRole";
 
 const isCluster = async () => {
-    return await pathExists(KubernetesServiceAccountJwtFile);
+    return await fse.pathExists(KubernetesServiceAccountJwtFile);
 };
 
 const getUrl = async () => {
@@ -18,7 +19,7 @@ const getRole = async () => {
 };
 
 const getJwt = async () => {
-    const content = await readFile(KubernetesServiceAccountJwtFile);
+    const content = await fse.readFile(KubernetesServiceAccountJwtFile);
     return content.toString();
 };
 
