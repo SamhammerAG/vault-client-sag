@@ -14,7 +14,7 @@
   "explorer.fileNesting.patterns": {
     ".env": ".env.*",
     "package.json": ".yarnrc*, yarn*, .eslint*, eslint*, .oxlint*, oxlint*, .oxfmt*, .prettier*, prettier*, .editorconfig",
-    "vite.config.*": "vitest.config.*",
+    "tsdown.config.*": "vitest.config.*, tsconfig.*",
     "readme.md": "agents.md, claude.md, license",
     ".gitignore": ".git*"
   },
