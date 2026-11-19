@@ -34,6 +34,16 @@ and a conditional `exports` map. Older Node versions are not supported.
 - [x] `fs-extra` works in the ESM build (see Technical details). First done with a default import; then
       `fs-extra` and `@types/fs-extra` were removed and `src/kubernetes.ts` uses `node:fs/promises`.
 - [x] Node builtins are imported with the `node:` prefix (`node:util`, `node:child_process`, `node:fs/promises`).
+- [x] `hashi-vault-js` is updated to `^0.5.3` (needs `axios >=1.19.0`), and the lockfile resolves `axios` 1.21.0 and
+      `follow-redirects` 1.16.2. axios 1.18.1 had 12 advisories (fixed in 1.20.0); `yarn npm audit --environment
+      production` now reports none. axios is not added as our own dependency: we do not import it, and consumers
+      get a fixed version through their own lockfile (e.g. `yarn up -R axios` in `migrate-mongo-sag`).
+- [x] Dev dependency advisories from `yarn npm audit --all --recursive` are fixed where possible: `tar` 7.5.22 and
+      `ip-address` 10.7.6 (refreshed within their ranges), and `node-gyp` 13.1.0, which no longer pulls in
+      `cacache` / `glob`. Still open: `minimatch` 10.2.6 (moderate, ESLint only). The fix needs minimatch 11, which
+      `@eslint/config-array` 0.23.6, `@typescript-eslint/typescript-estree` 8.73.0 and `eslint-plugin-import-x`
+      4.18.1 allow, but all three are younger than the 14-day age gate (earliest ~2026-11-30). Then run
+      `yarn up -R @eslint/config-array typescript-eslint eslint-plugin-import-x` and `yarn dedupe`.
 - [x] `yarn sample` works against Vault. The sample uses top-level `await` again, because it is built as ESM now.
 - [ ] `migrate-mongo-sag` works with the new package (installed from the local tarball): its build starts and its
       tests pass. Not done yet: postponed, together with a test of a CommonJS consumer repo that runs migrations.
