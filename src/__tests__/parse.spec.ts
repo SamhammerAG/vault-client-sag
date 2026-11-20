@@ -1,4 +1,5 @@
-﻿import { parseVaultKey } from "../parse";
+﻿import { describe, it, expect } from "vitest";
+import { parseVaultKey } from "../parse";
 
 describe("parseVaultKey", () => {
     it("returns secret with sub-path ", () => {

@@ -1,4 +1,5 @@
-﻿import { getTimeout } from "../utils";
+﻿import { describe, it, expect, vi } from "vitest";
+import { getTimeout } from "../utils";
 
 describe("getTimeout", () => {
     it("returns default value", () => {
@@ -17,25 +18,23 @@ describe("getTimeout", () => {
     });
 
     it("returns param value instead of env value", () => {
-        process.env.VaultTimeout = "2000";
+        vi.stubEnv("VaultTimeout", "2000");
 
         const timeout = getTimeout({ timeout: 1000 });
         expect(timeout).toEqual(1000);
     });
 
     it("returns env value 0", () => {
-        process.env.VaultTimeout = "0";
+        vi.stubEnv("VaultTimeout", "0");
 
         const timeout = getTimeout();
         expect(timeout).toEqual(0);
     });
 
     it("returns env value 1000", () => {
-        process.env.VaultTimeout = "1000";
+        vi.stubEnv("VaultTimeout", "1000");
 
         const timeout = getTimeout();
         expect(timeout).toEqual(1000);
     });
 });
-
-afterEach(() => (process.env.VaultTimeout = undefined));

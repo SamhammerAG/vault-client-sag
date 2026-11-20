@@ -9,9 +9,8 @@
     "strict": true,
     "useUnknownInCatchVariables": false,
     "skipLibCheck": true,
-    "types": ["node", "jest"],
+    "types": ["node"],
     "lib": ["ESNext"],
-    "declaration": true,
-    "rootDir": "src"
+    "noEmit": true
   }
 }

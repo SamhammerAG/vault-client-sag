@@ -1,11 +1,11 @@
 {
   "name": "@samhammer/vault-client-sag",
   "version": "0.0.0",
+  "type": "module",
   "main": "dist/index.js",
-  "types": "dist/main.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist/**/*",
-    "!dist/__tests__"
+    "dist/**/*"
   ],
   "repository": "https://github.com/SamhammerAG/vault-client-sag",
   "author": "SamhammerAG",
@@ -15,33 +15,33 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "ncc build src/main.ts",
-    "run": "ncc build src/run.ts && node dist/index.js",
+    "build": "tsdown",
+    "sample": "tsdown src/__samples__/load-secret.ts --no-dts -d node_modules/.cache/vault-client-sag && node node_modules/.cache/vault-client-sag/load-secret.js",
     "format": "prettier --write --experimental-cli src/",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "typecheck": "tsc",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/fs-extra": "^11.0.4",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.13.2",
-    "@vercel/ncc": "^0.38.4",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.17.1",
     "globals": "^17.14.0",
-    "jest": "^30.5.2",
     "jiti": "^2.7.0",
     "prettier": "^3.9.10",
-    "ts-jest": "^29.4.15",
+    "tsdown": "~0.23.5",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.72.1"
+    "typescript-eslint": "^8.72.1",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
   },
   "dependencies": {
-    "fs-extra": "^11.3.5",
-    "hashi-vault-js": "^0.5.2"
+    "hashi-vault-js": "^0.5.3"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "volta": {
     "node": "24.22.1",

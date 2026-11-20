@@ -1,4 +1,4 @@
-﻿import { getVault } from "./main";
+﻿import { getVault } from "../main";
 
 try {
     // Runs with vault-cli per default (requires `vault login` beforehand and VAULT_ADDR set)
