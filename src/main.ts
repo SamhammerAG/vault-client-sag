@@ -35,16 +35,16 @@ class VaultClient {
             return response.data[secretKey] as string;
         } catch (error) {
             if (!error.isVaultError) {
-                throw new Error(`unexpected error when accessing secret '${vaultKey}' ${error}`);
+                throw new Error(`unexpected error when accessing secret '${vaultKey}' ${error}`, { cause: error });
             }
 
             switch (error.status) {
                 case 404:
-                    throw new Error(`secret '${vaultKey}' not found`);
+                    throw new Error(`secret '${vaultKey}' not found`, { cause: error });
                 case 403:
-                    throw new Error(`access denied for secret '${vaultKey}'`);
+                    throw new Error(`access denied for secret '${vaultKey}'`, { cause: error });
                 default:
-                    throw new Error(`unexpected error when accessing secret '${vaultKey}' ${error.vaultHelpMessage}`);
+                    throw new Error(`unexpected error when accessing secret '${vaultKey}' ${error.vaultHelpMessage}`, { cause: error });
             }
         }
     }
@@ -94,7 +94,7 @@ const getAuthMethod = async () => {
 };
 
 const getUrl = async (authMethod: AuthMethod) => {
-    let url = "";
+    let url: string | undefined = "";
 
     switch (authMethod) {
         case AuthMethod.Kubernetes: {

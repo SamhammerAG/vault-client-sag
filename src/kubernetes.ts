@@ -23,7 +23,7 @@ const getJwt = async () => {
 };
 
 const getToken = async (vault: Vault) => {
-    const role = await getRole();
+    const role = (await getRole()) ?? "";
     const jwt = await getJwt();
 
     const response = await vault.loginWithK8s(role, jwt);

@@ -10,5 +10,13 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    ".env": ".env.*",
+    "package.json": ".yarnrc*, yarn*, .eslint*, eslint*, .oxlint*, oxlint*, .oxfmt*, .prettier*, prettier*, .editorconfig",
+    "vite.config.*": "vitest.config.*",
+    "readme.md": "agents.md, claude.md, license",
+    ".gitignore": ".git*"
+  },
   "files.exclude": {}
 }

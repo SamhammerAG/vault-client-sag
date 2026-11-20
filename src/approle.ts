@@ -17,8 +17,8 @@ const getSecret = () => {
 };
 
 const getToken = async (vault: Vault) => {
-    const role = getRole();
-    const secret = getSecret();
+    const role = getRole() ?? "";
+    const secret = getSecret() ?? "";
 
     const response = await vault.loginWithAppRole(role, secret);
     const result = response as { client_token: string };
