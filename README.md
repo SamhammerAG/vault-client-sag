@@ -1,13 +1,19 @@
 # vault-client-sag
 
-This library can be used if you want to load specific keys from vault, but works only for interal usage of Samhammer.
+This library can be used if you want to load specific keys from vault, but works only for internal usage of Samhammer.
 
-It uses specific authentication logic:
+It uses specific authentication logic, checked in this order:
 
+-   Kubernetes: Does a kubernetes role auth (if the service account token exists)
+-   AppRole: Does an AppRole auth (if the AppRole environment variables are set)
 -   Locally: Uses the token from vault-cli and the url from the `VAULT_ADDR` environment variable
--   Kubernetes: Does a kubernetes role auth
 
 ## Prerequirements:
+
+### Node.js
+
+The package is published as ES module (ESM) and requires Node.js 24 or newer.
+It can still be loaded with `require()` from CommonJS code, because Node.js 24 supports `require()` of ES modules.
 
 ### Locally
 
@@ -42,19 +48,19 @@ Use following environment variables for this configuration:
 
 ## How to use:
 
-Sample with Javascript:
+Sample with Javascript (CommonJS):
 
 ```js
 const { getVault } = require("@samhammer/vault-client-sag");
 
 const vaultMap = {
-  [`VaultKey--kv-v2/data/MySecret/Username`]: "UserName",
-  [`VaultKey--kv-v2/data/MySecret/Password`]: "Password",
+    [`VaultKey--kv-v2/data/MySecret/Username`]: "UserName",
+    [`VaultKey--kv-v2/data/MySecret/Password`]: "Password"
 };
 
 getVault()
-  .then(vault => vault.loadSecretsToEnv(vaultMap));
-  .then(() => console.log(`Username: ${process.env.UserName} Password: ${process.env.Password}`);
+    .then((vault) => vault.loadSecretsToEnv(vaultMap))
+    .then(() => console.log(`Username: ${process.env.UserName} Password: ${process.env.Password}`));
 ```
 
 Sample with Typescript:
@@ -79,6 +85,11 @@ Available Options:
 -   Timeout in milliseconds (default: 3000 )
     -   as param `getVault({ timeout: 5000 })`
     -   as env variable `VaultTimeout = 5000`
+
+## Development
+
+-   `yarn lint`, `yarn typecheck`, `yarn test` (Vitest) and `yarn build` (tsdown) run the same steps as the CI
+-   `yarn sample` builds and runs `src/__samples__/load-secret.ts` against the real vault (needs the prerequirements above)
 
 ## How to publish
 

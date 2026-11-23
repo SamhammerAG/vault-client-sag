@@ -1,5 +1,5 @@
-import { promisify } from "util";
-import { execFile } from "child_process";
+import { promisify } from "node:util";
+import { execFile } from "node:child_process";
 import type Vault from "hashi-vault-js";
 
 const EnvironmentVariableNameVaultAddr = "VAULT_ADDR";

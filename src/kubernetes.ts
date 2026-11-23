@@ -1,9 +1,18 @@
-import { pathExists, readFile } from "fs-extra";
+import { access, readFile } from "node:fs/promises";
 import type Vault from "hashi-vault-js";
 
 const KubernetesServiceAccountJwtFile = "/var/run/secrets/kubernetes.io/serviceaccount/token";
 const EnvironmentVariableNameVaultUrl = "VaultUrl";
 const EnvironmentVariableNameKubernetesRole = "VaultKubernetesRole";
+
+const pathExists = async (path: string) => {
+    try {
+        await access(path);
+        return true;
+    } catch {
+        return false;
+    }
+};
 
 const isCluster = async () => {
     return await pathExists(KubernetesServiceAccountJwtFile);
